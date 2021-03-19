@@ -1,7 +1,7 @@
 import { useDetail } from ".";
 
 export const Profile = () => {
-  const { name, filmNames, birthYear, gender } = useDetail();
+  const { name, filmNames, birthYear } = useDetail();
 
   if (name === "") {
     return null;
@@ -15,7 +15,7 @@ export const Profile = () => {
         List of films:
         <ul>
           {filmNames?.map((name) => (
-            <li>{name}</li>
+            <li key={name}>{name}</li>
           ))}
         </ul>
       </li>

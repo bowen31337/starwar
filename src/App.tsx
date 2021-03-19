@@ -7,7 +7,7 @@ import { Spinner } from "./loader";
 import { Profile } from "./people/detail";
 
 const App = () => {
-  const { error, loading } = useList();
+  const { error, loading, results } = useList();
   const { next } = usePager();
   const dispatch = useDispatch();
 
@@ -15,7 +15,7 @@ const App = () => {
     dispatch(fetchPeople(next as string));
   }, []);
 
-  if (loading) {
+  if (loading || results.length === 0) {
     return <Spinner />;
   }
   if (error !== "") {

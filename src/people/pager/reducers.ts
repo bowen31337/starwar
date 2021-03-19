@@ -1,4 +1,3 @@
-import { deflate } from "node:zlib";
 import { Action } from "../types";
 import { ActionType, PagerPayload } from "./types";
 

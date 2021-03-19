@@ -1,20 +1,19 @@
-import { combineEpics, Epic, ofType } from "redux-observable";
-import { catchError, map, mergeMap, switchMap, tap, withLatestFrom } from "rxjs/operators";
-import { combineLatest, merge, of } from "rxjs";
+import { Epic, ofType } from "redux-observable";
+import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
+import { combineLatest, of } from "rxjs";
 
 import { ajax } from "rxjs/ajax";
-import { ActionType, PeoplePayload } from "./types";
+import { ActionType } from "./types";
 import { fetchPeopleFailure, fetchPeopleSuccess } from "./action";
 import { mapPeoplePayload } from "./utils";
 import { setPager } from "../pager";
 
-export const fetchPeopleEpic: Epic = (action$, state$) =>
+export const fetchPeopleEpic: Epic = (action$) =>
   action$.pipe(
     ofType(ActionType.FETCH_PEOPLE),
-    withLatestFrom(state$),
-    switchMap(([_, state]) => {
-      const { next } = state.people.pager;
-      return ajax.getJSON(next).pipe(
+    map((action) => action.payload),
+    switchMap((payload) => {
+      return ajax.getJSON(payload).pipe(
         mergeMap((data: any) =>
           combineLatest(
             data.results.map((result: any) =>
@@ -37,7 +36,7 @@ export const fetchPeopleEpic: Epic = (action$, state$) =>
           const { next, prev } = data;
           return [fetchPeopleSuccess(successPayload), setPager({ next, prev })];
         }),
-        catchError(error => of(fetchPeopleFailure(error.message)))
+        catchError((error) => of(fetchPeopleFailure(error.message)))
       );
     })
   );
