@@ -20,6 +20,9 @@ export const detailReducer = (
         ...action.payload,
       };
     }
+    case ActionType.RESET_PEOPLE: {
+      return initState;
+    }
     default:
       return state;
   }

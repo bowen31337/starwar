@@ -7,6 +7,7 @@ import { ActionType } from "./types";
 import { fetchPeopleFailure, fetchPeopleSuccess } from "./action";
 import { mapPeoplePayload } from "./utils";
 import { setPager } from "../pager";
+import { resetPeople } from "../detail";
 
 export const fetchPeopleEpic: Epic = (action$) =>
   action$.pipe(
@@ -34,7 +35,7 @@ export const fetchPeopleEpic: Epic = (action$) =>
         switchMap((data) => {
           const successPayload = data.results.map(mapPeoplePayload);
           const { next, prev } = data;
-          return [fetchPeopleSuccess(successPayload), setPager({ next, prev })];
+          return [fetchPeopleSuccess(successPayload), setPager({ next, prev }), resetPeople()];
         }),
         catchError((error) => of(fetchPeopleFailure(error.message)))
       );

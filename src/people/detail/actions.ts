@@ -7,3 +7,9 @@ export const selectPeople = (selectedPeople: Partial<PeoplePayload>) => (
         payload: selectedPeople
     }
 )
+
+export const resetPeople = () => (
+    {
+        type: ActionType.RESET_PEOPLE,
+    }
+)
