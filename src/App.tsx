@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { fetchPeople, TableList, useList } from "./people/list";
+import { Pager, usePager } from "./people/pager";
+import "./App.css";
+import { useDispatch } from "react-redux";
+import { Spinner } from "./loader";
+import { Profile } from "./people/detail";
 
-function App() {
+const App = () => {
+  const { error, loading } = useList();
+  const { next } = usePager();
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(fetchPeople(next as string));
+  }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
+  if (error !== "") {
+    return <h1>Oops, An Error Happen.</h1>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <TableList />
+      <Pager />
+      <Profile />
+    </main>
   );
-}
+};
 
 export default App;
