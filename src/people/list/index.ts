@@ -5,3 +5,4 @@ export * from "./table";
 export * from "./epics";
 export * from "./utils";
 export * from "./hooks";
+export * from "./epics";

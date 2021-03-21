@@ -1,7 +1,7 @@
 import { Action } from "../types";
 import { ActionType, PagerPayload } from "./types";
 
-const API_PEOPLE_PAGE_1 = "http://swapi.dev/api/people/?page=1";
+export const API_PEOPLE_PAGE_1 = "http://swapi.dev/api/people/?page=1";
 
 const initState: PagerPayload = {
   next: API_PEOPLE_PAGE_1,
