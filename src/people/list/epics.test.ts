@@ -4,9 +4,10 @@ import { ajax } from "rxjs/ajax";
 import { fetchPeopleEpic, fetchPeople } from ".";
 import { API_PEOPLE_PAGE_1, setPager } from "../pager";
 import { Action } from "../types";
-import { of, from } from "rxjs";
-import { fetchPeopleSuccess } from "./action";
+import { of, throwError } from "rxjs";
+import { fetchPeopleFailure, fetchPeopleSuccess } from "./action";
 import { resetPeople } from "../detail";
+import { StateObservable } from "redux-observable";
 
 const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
@@ -51,7 +52,7 @@ describe("epics", () => {
           const action$: any = hot("-a", {
             a: fetchPeople(API_PEOPLE_PAGE_1) as Action<string>,
           });
-          const state$: any = of({});
+          const state$ = of({}) as StateObservable<any>;
 
           const output$ = fetchPeopleEpic(action$, state$, null);
 
@@ -71,6 +72,23 @@ describe("epics", () => {
               next: "http://swapi.dev/api/people/?page=2",
             }),
             c: resetPeople(),
+          });
+        });
+      });
+    });
+    describe("api failure", () => {
+      it("should dispatch failure action", () => {
+        ajaxMock.mockImplementation(() => throwError(new Error("api error")));
+        testScheduler.run(({ hot, cold, expectObservable }) => {
+          const action$: any = hot("-a", {
+            a: fetchPeople(API_PEOPLE_PAGE_1) as Action<string>,
+          });
+          const state$ = of({}) as StateObservable<any>;
+
+          const output$ = fetchPeopleEpic(action$, state$, null);
+
+          expectObservable(output$).toBe("--a", {
+            a: fetchPeopleFailure(new Error("api error")),
           });
         });
       });

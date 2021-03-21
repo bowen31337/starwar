@@ -35,9 +35,13 @@ export const fetchPeopleEpic: Epic = (action$) =>
         switchMap((data) => {
           const successPayload = data.results.map(mapPeoplePayload);
           const { next, prev } = data;
-          return of(fetchPeopleSuccess(successPayload), setPager({ next, prev }), resetPeople());
+          return of(
+            fetchPeopleSuccess(successPayload),
+            setPager({ next, prev }),
+            resetPeople()
+          );
         }),
-        catchError((error) => of(fetchPeopleFailure(error.message)))
+        catchError((error) => of(fetchPeopleFailure(error)))
       );
     })
   );
